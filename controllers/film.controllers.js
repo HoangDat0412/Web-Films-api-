@@ -1,4 +1,4 @@
-const {Films} = require("../models")
+const {Films,Actor,FilmType} = require("../models")
 
 const createFilm = async (req,res)=>{
     const data = req.body
@@ -73,13 +73,48 @@ const getDetailFilm = async (req,res)=>{
     const id = req.params.id;
     const numberId = parseInt(id)
     try {
-        const film = await Films.findOne({
+        let film = await Films.findOne({
             where:{
                 id:numberId
             }
         })
+        const actor = await Actor.findAll({
+            where:{
+                filmId:numberId
+            }
+        })
+        const filmType = await FilmType.findAll({
+            where:{
+                filmId:numberId
+            }
+        })
+
        if(film){
+        film = {
+            name:film.name,
+                hot:film.hot,
+                des:film.des,
+                yRelease:film.yRelease,
+                director:film.director,
+                src:film.src,
+                status:film.status,
+                img:film.img,
+        }
+        if(actor){
+            film = {
+                ...film,
+                actor
+            }
+        }
+        if(filmType){
+            film = {
+                ...film,
+                filmType
+            }
+        }
         res.status(200).send(film)
+        
+
        }else{
         res.status(400).send("Not found")
        }
