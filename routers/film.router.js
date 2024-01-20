@@ -14,7 +14,7 @@ FilmRouter.delete("/:id",authenticate,auAdmin(["ADMIN","STAFF"]),deleteFilm)
 // get film for user 
 FilmRouter.get("/",getFilmUser)
 // get detail film
-FilmRouter.get("/detail/:id",authenticate,auAdmin(["CLIENT","ADMIN","STAFF"]),getDetailFilm)
+FilmRouter.get("/detail/:id",authenticate,getDetailFilm)
 // get film for admin
 FilmRouter.get("/admin",authenticate,auAdmin(["ADMIN","STAFF"]),getFilmAdmin)
 // search film 

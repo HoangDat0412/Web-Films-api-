@@ -3,11 +3,9 @@ const {Checkout,Users, sequelize} = require("../models");
 const createCheckout = async (req,res)=>{
     const uid = req.user.id;
     const userId = parseInt(uid)
-    const {moneyPay} = req.body
-
     const data = {
         userId,
-        moneyPay
+        ...req.body
     }
     try {
         const result = await Checkout.create(data);
@@ -21,7 +19,6 @@ const createCheckout = async (req,res)=>{
             })
         }
         res.status(201).send(result)
-
     } catch (error) {
         res.status(505).send(error)
     }

@@ -17,6 +17,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      accountNumber: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      bank: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
