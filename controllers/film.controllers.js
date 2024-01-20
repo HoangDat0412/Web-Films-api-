@@ -1,4 +1,4 @@
-const {Films,Actor,FilmType} = require("../models")
+const {Films,Actor,FilmType, sequelize} = require("../models")
 
 const createFilm = async (req,res)=>{
     const data = req.body
@@ -56,6 +56,7 @@ const getFilmUser = async (req,res)=>{
         const result = []
         for (let index = 0; index < films.length; index++) {
             result.push({
+                id:films[index].id,
                 img:films[index].img,
                 name:films[index].name,
                 status:films[index].status,
@@ -133,11 +134,29 @@ const getFilmAdmin = async (req,res)=>{
     }
 }
 
+const searchFilm = async (req,res)=>{
+    const {name} = req.body;
+    console.log(name);
+
+    try {
+        const result = await sequelize.query(`SELECT * FROM films
+        WHERE name LIKE '%${name}%';`)
+        if(result){
+            res.status(200).send(result[0])
+        }else{
+            res.status(400).send("Not found !")
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 module.exports = {
     createFilm,
     deleteFilm,
     updateFilm,
     getFilmAdmin,
     getFilmUser,
-    getDetailFilm
+    getDetailFilm,
+    searchFilm
 }

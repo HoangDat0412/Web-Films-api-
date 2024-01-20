@@ -1,5 +1,5 @@
 const express = require("express");
-const { createFilm, updateFilm, deleteFilm, getFilmUser, getFilmAdmin, getDetailFilm } = require("../controllers/film.controllers");
+const { createFilm, updateFilm, deleteFilm, getFilmUser, getFilmAdmin, getDetailFilm, searchFilm } = require("../controllers/film.controllers");
 const {authenticate} = require("../middlewares/auth/authenticate")
 const {auAdmin} = require("../middlewares/auth/auAdmin")
 const FilmRouter = express.Router();
@@ -17,7 +17,8 @@ FilmRouter.get("/",getFilmUser)
 FilmRouter.get("/detail/:id",authenticate,auAdmin(["CLIENT","ADMIN","STAFF"]),getDetailFilm)
 // get film for admin
 FilmRouter.get("/admin",authenticate,auAdmin(["ADMIN","STAFF"]),getFilmAdmin)
-
+// search film 
+FilmRouter.get("/search",searchFilm)
 
 
 module.exports = FilmRouter;

@@ -11,6 +11,4 @@ FilmtypeRouter.post("/",authenticate,auAdmin(["ADMIN","STAFF"]),createFilmType)
 FilmtypeRouter.delete("/:id",authenticate,auAdmin(["ADMIN","STAFF"]),deleteFilmType)
 
 
-
-
 module.exports = FilmtypeRouter;
