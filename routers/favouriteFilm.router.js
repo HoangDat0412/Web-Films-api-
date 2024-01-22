@@ -5,9 +5,8 @@ const { createFavouriteFilm,deleteFavouriteFilm,getFavouriteFilm } = require("..
 const FavouriteFilmRouter = express.Router()
 
 // FAVOURITE FILM
-FavouriteFilmRouter.post("/create",authenticate,createFavouriteFilm)
-// delete film 
-FavouriteFilmRouter.delete("/:id",authenticate,deleteFavouriteFilm)
+FavouriteFilmRouter.post("/",authenticate,createFavouriteFilm)
+
 // get film for user 
 FavouriteFilmRouter.get("/",authenticate,getFavouriteFilm)
 

@@ -16,7 +16,6 @@ const createUser = async (req,res)=>{
         res.status(505).send(error)
     }
 }
-
 const getUser = async (req,res)=>{
     try {
         const users = await Users.findAll();
@@ -30,7 +29,6 @@ const getUser = async (req,res)=>{
     }
 
 }
-
 const login = async (req,res)=>{
    
     const {email,passWord} = req.body;
@@ -105,12 +103,14 @@ const deleteUser = async (req,res)=>{
 const getUserInformation = async (req,res)=>{
     const id = parseInt(req.user.id)
     try {
-        const result = await Users.findOne({
+        let user = await Users.findOne({
             where:{
                 id
             }
         })
-        res.status(200).send(result)
+
+
+        res.status(200).send(user)
     } catch (error) {
         res.status(500).send(error)
     }

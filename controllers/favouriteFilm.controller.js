@@ -3,6 +3,7 @@ const {FavouriteFilm, sequelize} = require("../models")
 const createFavouriteFilm = async (req,res)=>{
     const fid = req.body.filmId;
     const uid = req.user.id;
+
     const filmId = parseInt(fid);
     const userId = parseInt(uid)
 
@@ -11,8 +12,18 @@ const createFavouriteFilm = async (req,res)=>{
         userId
     }
     try {
-        const result = await FavouriteFilm.create(data);
-        res.status(201).send(result)
+        const checkExist = await FavouriteFilm.findOne({
+            where : data
+        })
+        if (checkExist) {
+            const result = await FavouriteFilm.destroy({
+                where : data
+            })
+            res.status(200).send("Delete success !")
+        } else {
+            const result = await FavouriteFilm.create(data);
+            res.status(201).send(result)
+        }
     } catch (error) {
         res.status(505).send(error)
     }

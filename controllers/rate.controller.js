@@ -32,6 +32,47 @@ const createRate = async (req,res)=>{
     }
 }
 
+const getRatePointTotal = async (req,res)=>{
+    const Id =req.params.id
+    const id = parseInt(Id)
+    try {
+        const result = await Rate.findAll({
+            where :{
+                filmId:id
+            }
+        })
+        if(result){
+            res.status(200).send(result);
+        }else{
+            res.status(404).send("not found")
+        }
+       
+    } catch (error) {
+        res.status(500).send(error)
+    }
+
+}
+
+const getRatePoint = async(req,res)=>{
+    const userId = parseInt(req.user.id);
+    const Id =req.params.id
+    const filmId = parseInt(Id)
+    try {
+        const result = await Rate.findOne({
+            where:{
+                userId,
+                filmId
+            }
+        })
+
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 module.exports = {
-    createRate
+    createRate,
+    getRatePointTotal,
+    getRatePoint
 }

@@ -1,4 +1,4 @@
-const {Comments} = require("../models")
+const {Comments, sequelize} = require("../models")
 
 const createComment = async (req,res)=>{
     const data = {
@@ -34,13 +34,10 @@ const getAllComment = async (req,res)=>{
    const ID = req.params.id;
     const id = parseInt(ID)
     try {
-        const listComment = await Comments.findAll({
-            where : {
-                filmId:id
-            }
-        })
+        const listComment = await sequelize.query(`select users.userName,comments.id,comments.createdAt,comments.comment from users,comments
+        where users.id = comments.userId and comments.filmId = ${id};`)
 
-        res.status(200).send(listComment)
+        res.status(200).send(listComment[0])
     } catch (error) {
         
     }

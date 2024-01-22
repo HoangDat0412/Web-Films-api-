@@ -18,7 +18,7 @@ FilmRouter.get("/detail/:id",authenticate,getDetailFilm)
 // get film for admin
 FilmRouter.get("/admin",authenticate,auAdmin(["ADMIN","STAFF"]),getFilmAdmin)
 // search film 
-FilmRouter.get("/search",searchFilm)
+FilmRouter.post("/search",searchFilm)
 
 
 module.exports = FilmRouter;
