@@ -40,7 +40,7 @@ const getCheckout = async (req,res)=>{
 }
 const getAllCheckout = async (req,res)=>{
     try {
-        const result = await sequelize.query(`select users.id as userId ,users.email,checkouts.moneyPay,checkouts.createdAt from users,checkouts 
+        const result = await sequelize.query(`select users.id as userId ,users.email,checkouts.moneyPay,checkouts.createdAt,checkouts.accountNumber,checkouts.bank from users,checkouts 
         where users.id = checkouts.userId;`)
 
         res.status(200).send(result[0])

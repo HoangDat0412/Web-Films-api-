@@ -116,11 +116,27 @@ const getUserInformation = async (req,res)=>{
     }
 }
 
+
+const getUserFromId = async (req,res)=>{
+    const id = parseInt(req.params.id)
+    try {
+        let user = await Users.findOne({
+            where:{
+                id
+            }
+        })
+        res.status(200).send(user)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
     login,
     updateUser,
     deleteUser,
-    getUserInformation
+    getUserInformation,
+    getUserFromId
 }
