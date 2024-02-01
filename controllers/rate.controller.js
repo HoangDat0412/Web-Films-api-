@@ -28,7 +28,7 @@ const createRate = async (req,res)=>{
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(400).send(error);
     }
 }
 
@@ -48,7 +48,7 @@ const getRatePointTotal = async (req,res)=>{
         }
        
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 
 }
@@ -67,7 +67,7 @@ const getRatePoint = async(req,res)=>{
 
         res.status(200).send(result)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 

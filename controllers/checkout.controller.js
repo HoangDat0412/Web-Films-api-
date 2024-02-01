@@ -20,7 +20,7 @@ const createCheckout = async (req,res)=>{
         }
         res.status(201).send(result)
     } catch (error) {
-        res.status(505).send(error)
+        res.status(400).send(error)
     }
 }
 
@@ -35,7 +35,7 @@ const getCheckout = async (req,res)=>{
         })
         res.status(200).send(result)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 const getAllCheckout = async (req,res)=>{
@@ -45,7 +45,7 @@ const getAllCheckout = async (req,res)=>{
 
         res.status(200).send(result[0])
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 module.exports = {

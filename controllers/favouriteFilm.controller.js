@@ -25,7 +25,7 @@ const createFavouriteFilm = async (req,res)=>{
             res.status(201).send(result)
         }
     } catch (error) {
-        res.status(505).send(error)
+        res.status(400).send(error)
     }
 }
 const deleteFavouriteFilm = async (req,res)=>{
@@ -34,16 +34,20 @@ const deleteFavouriteFilm = async (req,res)=>{
     const filmId = parseInt(fid);
     const userId = parseInt(uid)
     try {
-        await FavouriteFilm.destroy({
+        const result = await FavouriteFilm.destroy({
            where: {
             filmId,
             userId
            }
          });
-         res.status(200).send("Delete successful !")
+         if(result){
+            res.status(200).send("Delete successful !")
+         }else{
+            res.status(404).send("Not found !")
+         }
        
    } catch (error) {
-       res.status(500).send(err)
+       res.status(400).send(err)
    }
 }
 const updateFilm = async (req,res)=>{
@@ -68,7 +72,7 @@ const updateFilm = async (req,res)=>{
         }
 
     } catch (error) {
-        res.status(505).send(error)
+        res.status(400).send(error)
     }
 }
 

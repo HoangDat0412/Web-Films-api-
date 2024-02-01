@@ -6,7 +6,7 @@ const createFilmType= async (req,res)=>{
         const filmType = await FilmType.create(data)
         res.status(201).send(filmType)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 
 }
@@ -23,7 +23,7 @@ const deleteFilmType = async (req,res)=>{
           });
           res.status(200).send("Delete successful !")
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 

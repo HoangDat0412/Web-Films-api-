@@ -131,6 +131,21 @@ const getUserFromId = async (req,res)=>{
     }
 }
 
+const setAvatar = async (req,res)=>{
+    const file = req.file;
+    console.log(file);
+    const urlImage = `http://localhost:4000/${file.path}`
+    const {user} = req;
+    const userfound = await Users.findOne({
+        where :{
+            id:user.id
+        }
+    })
+    userfound.avatar = urlImage
+    userfound.save()
+    res.send(userfound)
+}
+
 module.exports = {
     createUser,
     getUser,
@@ -138,5 +153,6 @@ module.exports = {
     updateUser,
     deleteUser,
     getUserInformation,
-    getUserFromId
+    getUserFromId,
+    setAvatar
 }

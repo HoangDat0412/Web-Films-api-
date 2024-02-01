@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const authenticate = (req,res,next)=>{
     const authHeader = req.headers.authorization;
     if(!authHeader){
-        res.status(500).send("You need to login")
+        res.status(401).send("You need to login")
     }
     const token = authHeader.split(' ')[1];
     try {
@@ -14,7 +14,7 @@ const authenticate = (req,res,next)=>{
             res.status(401).send("You need to login")
         }
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 

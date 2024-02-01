@@ -5,7 +5,7 @@ const auAdmin = (arr) =>{
         if(arr.findIndex(ele=> ele === user.userType) > -1){
             next()
         }else{
-            res.status(403).send("you do not have access !")
+            res.status(401).send("you do not have access !")
         }
     }
 }

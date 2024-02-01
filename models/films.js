@@ -35,15 +35,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     src: {
       type:DataTypes.STRING,
-      allowNull:false
+      allowNull:true
     },
     status: {
       type:DataTypes.BOOLEAN,
     },
     img: {
       type:DataTypes.STRING,
-      allowNull:false
+      allowNull:true
     },
+    trailer: {
+      type:DataTypes.STRING,
+      allowNull:true
+    }  
   }, {
     sequelize,
     modelName: 'Films',

@@ -31,11 +31,19 @@ module.exports = {
       },
       src: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
+      },
+      trailer: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      img: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

@@ -10,7 +10,7 @@ const createComment = async (req,res)=>{
         const comment = await Comments.create(data)
         res.status(201).send(comment)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 
 }
@@ -26,7 +26,7 @@ const deleteComment = async (req,res)=>{
         })
         res.status(200).send("Delete success !")
     } catch (error) {
-        res.status(500).send(error)
+        res.status(400).send(error)
     }
 }
 
@@ -39,7 +39,7 @@ const getAllComment = async (req,res)=>{
 
         res.status(200).send(listComment[0])
     } catch (error) {
-        
+        res.status(400).send(error)
     }
 }
 

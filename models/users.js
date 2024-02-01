@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Users.init({
     userName: {
       type:DataTypes.STRING,
-      allowNull:false
+      allowNull : false
     },
     email: {
       type:DataTypes.STRING,
@@ -29,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     userType: {
       type:DataTypes.STRING,
+      defaultValue:"USER"
+    },
+    avatar: {
+      type:DataTypes.STRING,
+      defaultValue:"https://i.pinimg.com/originals/8a/9d/6e/8a9d6e85a93b8b3a8002896da71882a3.jpg"
     }
   }, {
     sequelize,
