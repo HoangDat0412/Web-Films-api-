@@ -1,10 +1,10 @@
 const multer  = require('multer');
 const { mkdirp } = require('mkdirp')
 const uploadImg = (type) =>{
-    const made = mkdirp.sync(`./public/img/user/${type}`)
     const storage = multer.diskStorage({
+        
         destination: function (req, file, cb) {
-            cb(null, `./public/img/user/${type}`)
+            cb(null, process.env.NODE_ENV === 'production' ? `/usr/src/app/public/img/user/${type}` : `./public/img/user/${type}`)
         },
         filename: function (req, file, cb) {
             const uniqueSuffix = Date.now()

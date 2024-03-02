@@ -6,7 +6,9 @@ const CheckoutRouter = require("./checkout.router");
 const ActorRouter = require("./actor.router")
 const FilmtypeRouter = require("./filmtype.router")
 const RateRouter = require("./rate.router")
-const CommentRouter = require("./comment.router")
+const CommentRouter = require("./comment.router");
+const OrderRouter = require("./order.router");
+const CheckoutBitcoinRouter = require("./checkoutbitcoin.router");
 const RootRouters = express.Router();
 
 RootRouters.use("/user",UserRouter);
@@ -17,5 +19,7 @@ RootRouters.use("/actor",ActorRouter)
 RootRouters.use("/filmtype",FilmtypeRouter)
 RootRouters.use("/rate",RateRouter)
 RootRouters.use("/comment",CommentRouter)
+RootRouters.use("/order",OrderRouter)
+RootRouters.use("/checkoutbitcoin",CheckoutBitcoinRouter)
 
 module.exports = RootRouters

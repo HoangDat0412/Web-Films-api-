@@ -9,44 +9,56 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({Actor,Comments,FilmType}) {
       // define association here
+      // this.hasMany(Comments);
+      // this.hasMany(Actor);
+      // this.hasMany(FilmType);
     }
   }
   Films.init({
     name: {
       type:DataTypes.STRING,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     hot: {
       type:DataTypes.BOOLEAN,
     },
     des: {
       type:DataTypes.STRING,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     yRelease: {
       type:DataTypes.STRING,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     director: {
       type:DataTypes.STRING,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     src: {
       type:DataTypes.STRING,
-      allowNull:true
     },
     status: {
       type:DataTypes.BOOLEAN,
     },
     img: {
       type:DataTypes.STRING,
-      allowNull:true
     },
     trailer: {
       type:DataTypes.STRING,
-      allowNull:true
+    },
+    views: {
+      type:DataTypes.INTEGER,
+      defaultValue:0
     }  
   }, {
     sequelize,

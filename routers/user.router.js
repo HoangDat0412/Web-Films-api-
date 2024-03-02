@@ -13,4 +13,5 @@ UserRouter.get("/information",authenticate,getUserInformation);
 UserRouter.delete("/:id",authenticate,auAdmin(["ADMIN"]),deleteUser);
 UserRouter.get("/detail/:id",authenticate,auAdmin(["ADMIN"]),getUserFromId);
 UserRouter.post("/setavatar",authenticate,uploadImg("avatar"),setAvatar);
+
 module.exports = UserRouter

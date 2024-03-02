@@ -1,5 +1,5 @@
 const express = require("express");
-const { createFilm, updateFilm, deleteFilm, getFilmUser, getFilmAdmin, getDetailFilm, searchFilm, uploadFilm, getFilmWatching } = require("../controllers/film.controllers");
+const { createFilm, updateFilm, deleteFilm, getFilmUser, getFilmAdmin, getDetailFilm, searchFilm, uploadFilm, getFilmWatching,setListFilmToDb,handleView } = require("../controllers/film.controllers");
 const {authenticate} = require("../middlewares/auth/authenticate")
 const {auAdmin} = require("../middlewares/auth/auAdmin");
 const { uploadVideo } = require("../middlewares/upload/uploadVideo");
@@ -25,5 +25,10 @@ FilmRouter.get("/admin",authenticate,auAdmin(["ADMIN","STAFF"]),getFilmAdmin)
 // search film 
 FilmRouter.post("/search",searchFilm)
 // get film for watching 
-FilmRouter.get("/watching/:id",authenticate,auAdmin(["ADMIN","STAFF"]),getFilmWatching)
+FilmRouter.get("/watching/:id",authenticate,auAdmin(["ADMIN","STAFF","CLIENT"]),getFilmWatching)
+
+FilmRouter.get("/setListfilm",setListFilmToDb)
+
+FilmRouter.get('/view/:id',handleView)
+
 module.exports = FilmRouter;

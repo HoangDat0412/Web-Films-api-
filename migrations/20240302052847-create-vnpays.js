@@ -2,32 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Rates', {
+    await queryInterface.createTable('Vnpays', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      filmId: {
+      orderid: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "Films",
-          key: "id",
-        },
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
       },
-      rate: {
-        type: Sequelize.INTEGER,
+      status: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
+      },
+      moneyPay: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      deadline: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Rates');
+    await queryInterface.dropTable('Vnpays');
   }
 };

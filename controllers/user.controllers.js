@@ -1,4 +1,4 @@
-const {Users} = require('../models');
+const {Users,Comments,FavouriteFilm,Rate,Checkout,CheckoutBitcoins} = require('../models');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const createUser = async (req,res)=>{
@@ -16,6 +16,7 @@ const createUser = async (req,res)=>{
         res.status(505).send(error)
     }
 }
+
 const getUser = async (req,res)=>{
     try {
         const users = await Users.findAll();
@@ -41,7 +42,7 @@ const login = async (req,res)=>{
         if (user) {
             const match = bcrypt.compareSync(passWord,user.passWord)
             if(match){
-                const token = jwt.sign({id:user.id,userType:user.userType},"20112003",{expiresIn:60*1000})
+                const token = jwt.sign({id:user.id,userType:user.userType},"20112003",{expiresIn:3600*72})
                 res.status(200).send({
                     message:"Login success",
                     token:token
@@ -88,6 +89,31 @@ const deleteUser = async (req,res)=>{
     const id = req.params.id
     const ID = parseInt(id)
     try {
+         await Comments.destroy({
+            where: {
+              userId:ID
+            }
+          });
+          await FavouriteFilm.destroy({
+            where: {
+              userId:ID
+            }
+          });
+          await Rate.destroy({
+            where: {
+              userId:ID
+            }
+          });
+          await Checkout.destroy({
+            where: {
+              userId:ID
+            }
+          });
+          await CheckoutBitcoins.destroy({
+            where: {
+                userId:ID
+              }
+          })
          await Users.destroy({
             where: {
               id:ID
@@ -133,8 +159,7 @@ const getUserFromId = async (req,res)=>{
 
 const setAvatar = async (req,res)=>{
     const file = req.file;
-    console.log(file);
-    const urlImage = `http://localhost:4000/${file.path}`
+    const urlImage = `${file.path}`
     const {user} = req;
     const userfound = await Users.findOne({
         where :{
@@ -146,6 +171,7 @@ const setAvatar = async (req,res)=>{
     res.send(userfound)
 }
 
+
 module.exports = {
     createUser,
     getUser,
@@ -154,5 +180,5 @@ module.exports = {
     deleteUser,
     getUserInformation,
     getUserFromId,
-    setAvatar
+    setAvatar,
 }

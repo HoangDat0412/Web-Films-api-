@@ -3,10 +3,15 @@ const app = express()
 const path = require("path")
 const {sequelize} = require('./models')
 const RootRouters = require('./routers')
+const cors = require('cors');
 // setup app using json
 app.use(express.json());
+
+// Enable CORS for all routes
+app.use(cors());
 // set up router
 app.use('/api/v1/films',RootRouters)
+
 
 const publicPathhDirectory = path.join(__dirname,"./public")
 app.use("/public",express.static(publicPathhDirectory))
@@ -21,3 +26,4 @@ app.listen(port,async ()=>{
         console.error('Unable to connect to the database:', error);
       }
 })
+

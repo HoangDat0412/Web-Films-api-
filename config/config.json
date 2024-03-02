@@ -1,23 +1,26 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "2011",
+    "username": "root",
+    "password": "20112003",
     "database": "Film",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "host": "117.1.29.215",
+    "port":8080,
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "password": "20112003",
+    "database": "Film",
+    "host": "117.1.29.215",
+    "port":8080,
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "password": "20112003",
+    "database": "Film",
+    "host": "117.1.29.215",
+    "port":8080,
     "dialect": "mysql"
   }
 }

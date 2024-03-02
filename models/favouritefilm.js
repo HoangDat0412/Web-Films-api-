@@ -9,18 +9,31 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({ Users,Films}) {
+      // this.hasOne(Users,{
+      //   foreignKey: {
+      //     name: 'userId'
+      //   }
+      // })
+      // this.hasOne(Films,{
+      //   foreignKey: {
+      //     name: 'filmId'
+      //   }
+      // })
     }
   }
   FavouriteFilm.init({
     userId: {
       type:DataTypes.INTEGER,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     filmId: {
       type:DataTypes.INTEGER,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     }
   }, {
     sequelize,

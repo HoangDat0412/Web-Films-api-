@@ -1,12 +1,10 @@
 const multer = require("multer");
-const { mkdirp } = require("mkdirp");
+// const { mkdirp } = require("mkdirp");
 
 const uploadVideo = () => {
-  const made = mkdirp.sync(`public/film`);
-
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "public/film");
+      cb(null, process.env.NODE_ENV === 'production' ? '/usr/src/app/public/film' : 'public/film');
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + "-" + file.originalname);
@@ -16,13 +14,13 @@ const uploadVideo = () => {
 
   return uploadStorage.fields(
     [{
+        name: "img",
+      },
+      {
         name: "src",
       },
       {
         name: "trailer",
-      },
-      {
-        name: "img",
       }
     ]
   );

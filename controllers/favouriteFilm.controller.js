@@ -75,24 +75,19 @@ const updateFilm = async (req,res)=>{
         res.status(400).send(error)
     }
 }
-
-
-
-
 const getFavouriteFilm = async (req,res)=>{
     const uid = req.user.id;
     const userId = parseInt(uid)
     try {
-        const result = await sequelize.query(`select films.id,films.name,films.img from films,favouritefilms
-        where films.id = favouritefilms.filmId and favouritefilms.userId=${userId};`)
+        const result = await sequelize.query(`select Films.id,Films.name,Films.img from Films,FavouriteFilms
+        where Films.id = FavouriteFilms.filmId and FavouriteFilms.userId=${userId};`)
         res.status(200).send(result[0]);
     } catch (error) {
         res.status(500).send(error);
     }
 }
-
 module.exports = {
     createFavouriteFilm,
     deleteFavouriteFilm,
-    getFavouriteFilm
+    getFavouriteFilm,
 }

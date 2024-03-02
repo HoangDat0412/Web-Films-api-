@@ -2,20 +2,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Rates', {
+    await queryInterface.createTable('CheckoutBitcoins', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      filmId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Films",
-          key: "id",
-        },
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -25,8 +17,16 @@ module.exports = {
           key: "id",
         },
       },
-      rate: {
-        type: Sequelize.INTEGER,
+      walletaddress: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      bitcoinprice: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      deadline: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
       createdAt: {
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Rates');
+    await queryInterface.dropTable('CheckoutBitcoins');
   }
 };

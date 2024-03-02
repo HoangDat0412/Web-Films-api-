@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Checkout extends Model {
     /**
@@ -9,27 +10,43 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ Users}) {
       // define association here
+      // this.hasOne(Users,{
+      //   foreignKey: {
+      //     name: 'userId'
+      //   }
+      // })
     }
   }
   Checkout.init({
     userId: {
       type: DataTypes.INTEGER,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     moneyPay: {
       type:DataTypes.INTEGER,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     accountNumber: {
       type:DataTypes.STRING,
-      allowNull:false
+      validate: {
+        notEmpty: true, 
+      },
     },
     bank: {
       type:DataTypes.STRING,
-      allowNull:false
-    }
+      validate: {
+        notEmpty: true, 
+      },
+    },
+    deadline: {
+      type: DataTypes.DATE,
+    },
   }, {
     sequelize,
     modelName: 'Checkout',

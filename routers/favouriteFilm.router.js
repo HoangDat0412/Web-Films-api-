@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticate } = require("../middlewares/auth/authenticate");
-const { createFavouriteFilm,deleteFavouriteFilm,getFavouriteFilm } = require("../controllers/favouriteFilm.controller");
+const { createFavouriteFilm,deleteFavouriteFilm,getFavouriteFilm,checkFavouriteFilm } = require("../controllers/favouriteFilm.controller");
 
 const FavouriteFilmRouter = express.Router()
 

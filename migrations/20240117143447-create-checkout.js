@@ -12,6 +12,10 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
       moneyPay: {
         type: Sequelize.INTEGER,
@@ -23,6 +27,10 @@ module.exports = {
       },
       bank: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      deadline: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
       createdAt: {

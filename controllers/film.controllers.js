@@ -1,4 +1,4 @@
-const {Films,Actor,FilmType, sequelize} = require("../models")
+const {Films,Actor,FilmType, sequelize,Comments,FavouriteFilm,Rate} = require("../models")
 const fs = require('fs');
 const createFilm = async (req,res)=>{
     const data = req.body  
@@ -18,24 +18,55 @@ const deleteFilm = async (req,res)=>{
               id:ID
             }
           });
-
         if(result){
+            await Comments.destroy({
+                where: {
+                  filmId: ID
+                },
+            });
+            await FavouriteFilm.destroy({
+                where: {
+                  filmId: ID
+                },
+            });
+            await Rate.destroy({
+                where: {
+                  filmId: ID
+                },
+            });
+            await Actor.destroy({
+                where: {
+                  filmId: ID
+                },
+            });
+            await FilmType.destroy({
+                where: {
+                  filmId: ID
+                },
+            });
             await Films.destroy({
                 where: {
-                  id:ID
-                }
+                  id: ID
+                },
               });
-             fs.unlinkSync(result.img);
-             fs.unlinkSync(result.src);
-             fs.unlinkSync(result.trailer);
+             if(result.img){
+                fs.unlinkSync(result.img);
+             }
+             if(result.src){
+                fs.unlinkSync(result.src);
+             }
+             if(result.trailer){
+                fs.unlinkSync(result.trailer);
+             }
              res.status(200).send("Delete successful !")
         }else{
+         
             res.status(404).send("Not found !")
         }
         
        
    } catch (error) {
-       res.status(400).send(err)
+       res.status(400).send(error)
    }
 }
 const updateFilm = async (req,res)=>{
@@ -107,14 +138,15 @@ const getDetailFilm = async (req,res)=>{
        if(film){
         film = {
             name:film.name,
-                hot:film.hot,
-                des:film.des,
-                yRelease:film.yRelease,
-                director:film.director,
-                src:film.src,
-                status:film.status,
-                img:film.img,
-                trailer:film.trailer,
+            hot:film.hot,
+            des:film.des,
+            yRelease:film.yRelease,
+            director:film.director,
+            src:film.src,
+            status:film.status,
+            img:film.img,
+            trailer:film.trailer,
+            views:film.views
         }
         if(actor){
             film = {
@@ -158,7 +190,6 @@ const getFilmWatching = async (req,res)=>{
     }
 }
 
-
 const getFilmAdmin = async (req,res)=>{
     try {
         const result = await Films.findAll();
@@ -174,15 +205,28 @@ const getFilmAdmin = async (req,res)=>{
 
 const searchFilm = async (req,res)=>{
     const {name} = req.body;
-    console.log(name);
-
     try {
-        const result = await sequelize.query(`SELECT * FROM films
-        WHERE name LIKE '%${name}%';`)
-        if(result){
+        let result = await sequelize.query(`SELECT * FROM Films WHERE name LIKE '%${name}%'`)
+        if(result[0].length > 0){
             res.status(200).send(result[0])
         }else{
-            res.status(404).send("Not found !")
+
+             result = await sequelize.query(`SELECT * FROM FilmTypes
+            LEFT JOIN Films ON FilmTypes.filmId = Films.id 
+            where FilmTypes.typeName LIKE '%${name}%'`)
+            
+            if(result[0].length >0){
+                res.status(200).send(result[0])
+            }else{
+                result = await sequelize.query(`SELECT * FROM Actors
+                LEFT JOIN Films ON Actors.filmId = Films.id 
+                where Actors.actorName LIKE '%${name}%'`)
+                if(result[0].length >0){
+                    res.status(200).send(result[0])
+                }else{
+                    res.status(404).send("Not found")
+                }
+            }
         }
     } catch (error) {
         res.status(400).send(error)
@@ -190,9 +234,9 @@ const searchFilm = async (req,res)=>{
 }
 
 const uploadFilm = async (req,res)=>{
-    const img = req.files.img[0].path;
-    const trailer = req.files.trailer[0].path;
-    const src = req.files.src[0].path;
+    const img = req.files?.img[0].path;
+    const trailer = req.files?.trailer[0].path;
+    const src = req.files?.src[0].path;
 
     const id = parseInt(req.params.id)
     try {
@@ -201,16 +245,120 @@ const uploadFilm = async (req,res)=>{
                 id
             }
         })
-
+        if(result.img){
+            fs.unlinkSync(result.img);
+         }
+         if(result.src){
+            fs.unlinkSync(result.src);
+         }
+         if(result.trailer){
+            fs.unlinkSync(result.trailer);
+         }
         result.src = src;
         result.img = img;
         result.trailer = trailer;
-
         result.save()
-
         res.status(201).send(result)
     } catch (error) {
         res.status(400).send(error)
+    }
+}
+
+const handleView = async (req,res)=>{
+    const id = parseInt(req.params.id)
+
+    try {
+        const film = await Films.findOne({
+            where :{
+                id
+            }
+        })
+
+        film.views +=1;
+        film.save()
+        res.status(200).send("success")
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+const setListFilmToDb = async (req,res)=>{
+    const listFilm = [
+        {
+            "name": "Nhiệm Vụ: Bất Khả Thi 7 – Nghiệp Báo",
+            "hot": true,
+            "des": "Christopher McQuarrie",
+            "yRelease": "2023",
+            "director": "Christopher McQuarrie",
+            "src": "public\\film\\1707137265389-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707137265374-nv.jpg",
+            "trailer": "public\\film\\1707137265609-giadinhlaso1.mp4",
+        },
+        {
+            "name": "Blue Beetle",
+            "hot": true,
+            "des": "K.C. Hodenfield",
+            "yRelease": "2023",
+            "director": "K.C. Hodenfield",
+            "src": "public\\film\\1707137555090-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707137555083-nhanduyen.jpg",
+            "trailer": "public\\film\\1707137555350-giadinhlaso1.mp4",
+        },
+        {
+            "name": "Transformers 7: Quái Thú Trỗi Dậy ",
+            "hot": false,
+            "des": "Steven Caple Jr.",
+            "yRelease": "2023",
+            "director": "Steven Caple Jr.",
+            "src": "public\\film\\1707137653112-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707137653112-transformers.jpg",
+            "trailer": "public\\film\\1707137653332-giadinhlaso1.mp4",
+        },
+        {
+            "name": "Biệt Đội Đánh Thuê 4",
+            "hot": true,
+            "des": "Brian Smrz",
+            "yRelease": "2023",
+            "director": "Brian Smrz",
+            "src": "public\\film\\1707137811332-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707137811332-bietdoilinhdanhthue4.jpg",
+            "trailer": "public\\film\\1707137811558-giadinhlaso1.mp4",
+        },
+        {
+            "name": "Vệ Binh Dải Ngân Hà 3",
+            "hot": true,
+            "des": "James Gunn",
+            "yRelease": "2023",
+            "director": "James Gunn",
+            "src": "public\\film\\1707138009214-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707138009214-vebinh3.jpg",
+            "trailer": "public\\film\\1707138009429-giadinhlaso1.mp4",
+        },
+        {
+            "name": "Yêu Lại Vợ Ngầu",
+            "hot": true,
+            "des": "Nam Dae-joong",
+            "yRelease": "2023",
+            "director": "Nam Dae-joong",
+            "src": "public\\film\\1707138018093-giadinhlaso1.mp4",
+            "status": true,
+            "img": "public/film/1707138018093-yeulaivongau.jpg",
+            "trailer": "public\\film\\1707138018327-giadinhlaso1.mp4",
+        }
+    ]
+
+    try {
+        for (let index = 0; index < listFilm.length; index++) {
+            let result = await Films.create(listFilm[index]);    
+        }
+
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -223,5 +371,7 @@ module.exports = {
     getDetailFilm,
     searchFilm,
     uploadFilm,
-    getFilmWatching
+    getFilmWatching,
+    setListFilmToDb,
+    handleView
 }

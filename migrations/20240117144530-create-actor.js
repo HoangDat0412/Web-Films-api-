@@ -12,6 +12,10 @@ module.exports = {
       filmId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "Films",
+          key: "id",
+        },
       },
       actorName: {
         type: Sequelize.STRING,

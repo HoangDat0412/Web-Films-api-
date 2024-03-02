@@ -7,5 +7,5 @@ const CommentRouter = express.Router()
 
 CommentRouter.post("/",authenticate,createComment)
 CommentRouter.delete("/:id",authenticate,deleteComment)
-CommentRouter.get("/:id",authenticate,getAllComment)
+CommentRouter.get("/:id",getAllComment)
 module.exports = CommentRouter;
