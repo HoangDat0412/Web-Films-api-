@@ -9,6 +9,7 @@ const RateRouter = require("./rate.router")
 const CommentRouter = require("./comment.router");
 const OrderRouter = require("./order.router");
 const CheckoutBitcoinRouter = require("./checkoutbitcoin.router");
+const BitcoinRouter = require("./bitcoin.router");
 const RootRouters = express.Router();
 
 RootRouters.use("/user",UserRouter);
@@ -21,5 +22,6 @@ RootRouters.use("/rate",RateRouter)
 RootRouters.use("/comment",CommentRouter)
 RootRouters.use("/order",OrderRouter)
 RootRouters.use("/checkoutbitcoin",CheckoutBitcoinRouter)
+// RootRouters.use('/bitcoin',BitcoinRouter)
 
 module.exports = RootRouters

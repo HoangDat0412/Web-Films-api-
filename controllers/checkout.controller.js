@@ -54,10 +54,16 @@ const getAllCheckout = async (req,res)=>{
 
 const checkDeadline = async (req,res)=>{
     const userId = parseInt(req.user.id)
+    if(req.user.userType === "USER"){
+        res.status(200).send("tài khoản user")
+    }else if(req.user.userType === "STAFF" || req.user.userType === "ADMIN"){
+        res.status(200).send("tài khoản staff và admin không phải thực hiện checkout")
+    }
     try {
         const listCheckout = await Vnpays.findAll({
             where :{
-                userId:userId
+                userId:userId,
+                status:true
             }
         })
 
@@ -137,7 +143,7 @@ const checkDeadline = async (req,res)=>{
 
 
     } catch (error) {
-        console.log(error);
+        res.status(500).send(error)
     }
     
 }

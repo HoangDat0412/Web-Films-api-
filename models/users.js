@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       avatar: {
         type: DataTypes.STRING,
         defaultValue:
-          "https://i.pinimg.com/originals/8a/9d/6e/8a9d6e85a93b8b3a8002896da71882a3.jpg",
+          "/usr/src/app/public/img/user/avatar/defaultavatar.jpg",
       },
     },
     {

@@ -59,6 +59,12 @@ module.exports = (sequelize, DataTypes) => {
     views: {
       type:DataTypes.INTEGER,
       defaultValue:0
+    },
+    country: {
+      type:DataTypes.STRING,
+      validate: {
+        notEmpty: true, 
+      }
     }  
   }, {
     sequelize,

@@ -34,7 +34,7 @@ const getAllComment = async (req,res)=>{
    const ID = req.params.id;
     const id = parseInt(ID)
     try {
-        const listComment = await sequelize.query(`select Users.userName,Comments.id,Comments.createdAt,Comments.comment from Users,Comments
+        const listComment = await sequelize.query(`select Users.userName,Users.avatar,Comments.id,Comments.createdAt,Comments.comment from Users,Comments
         where Users.id = Comments.userId and Comments.filmId = ${id};`)
 
         res.status(200).send(listComment[0])

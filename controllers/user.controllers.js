@@ -1,6 +1,7 @@
 const {Users,Comments,FavouriteFilm,Rate,Checkout,CheckoutBitcoins} = require('../models');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 const createUser = async (req,res)=>{
     const data = req.body;
     // tạo ra 1 chuỗi ngẫu nhiên 
@@ -9,11 +10,16 @@ const createUser = async (req,res)=>{
     const password = bcrypt.hashSync(data.passWord,salt)
     data.passWord = password;
     data.userType = "USER";
-    try {
+    const user = await Users.findOne({
+        where:{
+            email:data.email
+        }
+    })
+    if(user){
+        res.status(409).send("Email đã tồn tại")
+    }else{
         const newUser = await Users.create(data)
         res.status(201).send(newUser)
-    } catch (error) {
-        res.status(505).send(error)
     }
 }
 
@@ -158,19 +164,53 @@ const getUserFromId = async (req,res)=>{
 }
 
 const setAvatar = async (req,res)=>{
-    const file = req.file;
-    const urlImage = `${file.path}`
-    const {user} = req;
-    const userfound = await Users.findOne({
-        where :{
-            id:user.id
+    try {
+        const file = req.file;
+        const urlImage = `${file.path}`
+        const {user} = req;
+        const userfound = await Users.findOne({
+            where :{
+                id:user.id
+            }
+        })
+        if(userfound.avatar){
+            if(userfound.avatar !=="/usr/src/app/public/img/user/avatar/defaultavatar.jpg"){
+                fs.unlinkSync(userfound.avatar);
+            }
         }
-    })
-    userfound.avatar = urlImage
-    userfound.save()
-    res.send(userfound)
+        userfound.avatar = urlImage
+        userfound.save()
+        res.status(201).send(userfound)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error)
+    }
 }
+const updateUserInfo = async (req,res)=>{
+    const id = parseInt(req.user.id)
+    let {email,userName,passWord} = req.body
+    const salt = bcrypt.genSaltSync(10);
+    passWord = bcrypt.hashSync(passWord,salt)
+    try {
+        const result = await Users.update({
+            email,
+            userName,
+            passWord
+        },{
+            where :{
+                id
+            }
+        })
+        if (result) {
+            res.status(200).send(result)
+        } else {
+            res.status(404).send("Not found")
+        }
 
+    } catch (error) {
+        res.status(505).send(error)
+    }
+}
 
 module.exports = {
     createUser,
@@ -181,4 +221,5 @@ module.exports = {
     getUserInformation,
     getUserFromId,
     setAvatar,
+    updateUserInfo
 }

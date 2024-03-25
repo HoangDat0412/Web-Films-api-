@@ -1,3 +1,4 @@
+const { type } = require("os");
 const {Films,Actor,FilmType, sequelize,Comments,FavouriteFilm,Rate} = require("../models")
 const fs = require('fs');
 const createFilm = async (req,res)=>{
@@ -6,7 +7,7 @@ const createFilm = async (req,res)=>{
         const newFilm = await Films.create(data);
         res.status(201).send(newFilm)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(500).send(error)
     }
 }
 const deleteFilm = async (req,res)=>{
@@ -106,10 +107,13 @@ const getFilmUser = async (req,res)=>{
                 name:films[index].name,
                 status:films[index].status,
                 hot:films[index].hot,
+                views:films[index].views,
+                yRelease:films[index].yRelease,
+                country:films[index].country,
             })
             
         }
-        res.status(200).send(result);
+        res.status(200).send(result.reverse());
 
     } catch (error) {
         res.status(400).send(error)
@@ -146,7 +150,8 @@ const getDetailFilm = async (req,res)=>{
             status:film.status,
             img:film.img,
             trailer:film.trailer,
-            views:film.views
+            views:film.views,
+            country:film.country
         }
         if(actor){
             film = {
@@ -170,7 +175,6 @@ const getDetailFilm = async (req,res)=>{
         res.status(400).send(error)
     }
 }
-
 const getFilmWatching = async (req,res)=>{
     const id = req.params.id;
     const numberId = parseInt(id)
@@ -189,7 +193,6 @@ const getFilmWatching = async (req,res)=>{
         res.status(400).send(error)
     }
 }
-
 const getFilmAdmin = async (req,res)=>{
     try {
         const result = await Films.findAll();
@@ -202,7 +205,6 @@ const getFilmAdmin = async (req,res)=>{
         res.status(400).send(error);
     }
 }
-
 const searchFilm = async (req,res)=>{
     const {name} = req.body;
     try {
@@ -224,7 +226,16 @@ const searchFilm = async (req,res)=>{
                 if(result[0].length >0){
                     res.status(200).send(result[0])
                 }else{
-                    res.status(404).send("Not found")
+                    result = await Films.findAll({
+                        where:{
+                            country:name
+                        }
+                    })
+                    if(result){
+                        res.status(200).send(result)
+                    }else{
+                        res.status(404).send("Not found")
+                    }
                 }
             }
         }
@@ -232,12 +243,11 @@ const searchFilm = async (req,res)=>{
         res.status(400).send(error)
     }
 }
-
 const uploadFilm = async (req,res)=>{
-    const img = req.files?.img[0].path;
-    const trailer = req.files?.trailer[0].path;
-    const src = req.files?.src[0].path;
-
+    console.log(req.files);
+    const img = req.files['img'][0].path;
+    const src = req.files['src'][0].path;
+    const trailer = req.files['trailer'][0].path;
     const id = parseInt(req.params.id)
     try {
         const result = await Films.findOne({
@@ -263,7 +273,6 @@ const uploadFilm = async (req,res)=>{
         res.status(400).send(error)
     }
 }
-
 const handleView = async (req,res)=>{
     const id = parseInt(req.params.id)
 
@@ -281,87 +290,166 @@ const handleView = async (req,res)=>{
         res.status(500).send(error)
     }
 }
-
-const setListFilmToDb = async (req,res)=>{
-    const listFilm = [
-        {
-            "name": "Nhiệm Vụ: Bất Khả Thi 7 – Nghiệp Báo",
-            "hot": true,
-            "des": "Christopher McQuarrie",
-            "yRelease": "2023",
-            "director": "Christopher McQuarrie",
-            "src": "public\\film\\1707137265389-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707137265374-nv.jpg",
-            "trailer": "public\\film\\1707137265609-giadinhlaso1.mp4",
-        },
-        {
-            "name": "Blue Beetle",
-            "hot": true,
-            "des": "K.C. Hodenfield",
-            "yRelease": "2023",
-            "director": "K.C. Hodenfield",
-            "src": "public\\film\\1707137555090-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707137555083-nhanduyen.jpg",
-            "trailer": "public\\film\\1707137555350-giadinhlaso1.mp4",
-        },
-        {
-            "name": "Transformers 7: Quái Thú Trỗi Dậy ",
-            "hot": false,
-            "des": "Steven Caple Jr.",
-            "yRelease": "2023",
-            "director": "Steven Caple Jr.",
-            "src": "public\\film\\1707137653112-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707137653112-transformers.jpg",
-            "trailer": "public\\film\\1707137653332-giadinhlaso1.mp4",
-        },
-        {
-            "name": "Biệt Đội Đánh Thuê 4",
-            "hot": true,
-            "des": "Brian Smrz",
-            "yRelease": "2023",
-            "director": "Brian Smrz",
-            "src": "public\\film\\1707137811332-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707137811332-bietdoilinhdanhthue4.jpg",
-            "trailer": "public\\film\\1707137811558-giadinhlaso1.mp4",
-        },
-        {
-            "name": "Vệ Binh Dải Ngân Hà 3",
-            "hot": true,
-            "des": "James Gunn",
-            "yRelease": "2023",
-            "director": "James Gunn",
-            "src": "public\\film\\1707138009214-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707138009214-vebinh3.jpg",
-            "trailer": "public\\film\\1707138009429-giadinhlaso1.mp4",
-        },
-        {
-            "name": "Yêu Lại Vợ Ngầu",
-            "hot": true,
-            "des": "Nam Dae-joong",
-            "yRelease": "2023",
-            "director": "Nam Dae-joong",
-            "src": "public\\film\\1707138018093-giadinhlaso1.mp4",
-            "status": true,
-            "img": "public/film/1707138018093-yeulaivongau.jpg",
-            "trailer": "public\\film\\1707138018327-giadinhlaso1.mp4",
-        }
-    ]
-
+const searchFilmType = async (req,res)=>{
+    let {name,pag} = req.body;
+    
     try {
-        for (let index = 0; index < listFilm.length; index++) {
-            let result = await Films.create(listFilm[index]);    
-        }
+        const  result = await sequelize.query(`SELECT * FROM FilmTypes
+        LEFT JOIN Films ON FilmTypes.filmId = Films.id 
+        where FilmTypes.typeName LIKE '%${name}%'`)
 
+        if(result[0].length >0){
+            const length = result[0].length
+            const numberpage = Math.ceil(length/24)
+            
+            if(pag){
+                pag = parseInt(pag)
+                console.log("haha");
+                let startfilm = (pag-1)*24;
+                if(startfilm > length || startfilm<0){
+                    return res.status(404).send("Not found")
+                }else{
+                    const films = result[0].slice(startfilm,startfilm+24)
+                    return res.status(200).send({
+                        pages:numberpage,
+                        films:films  
+                    })
+                }
+            }
+
+            res.status(200).send({
+                pages:numberpage,
+                films:result[0].slice(0,24)
+                
+            })
+        }else{
+            res.status(404).send("not found")
+        }
+        
     } catch (error) {
-        console.log(error);
+        res.status(500).send(error)
     }
 }
+const searchCountry = async (req,res)=>{
+    let {country,pag}  = req.body;
+    try {
+        const result = await Films.findAll({
+            where:{
+                country:country
+            }
+        })
+        if(result.length >0){
+            const length = result.length
+            const numberpage = Math.ceil(length/24)
+            if(pag){
+                pag = parseInt(pag)
+                let startfilm = (pag-1)*24;
+                if(startfilm > length || startfilm<0){
+                    return res.status(404).send("Not found")
+                }else{
+                    const films = result.slice(startfilm,startfilm+24)
+                    return res.status(200).send({
+                        pages:numberpage,
+                        films:films  
+                    })
+                }
+            }
 
+            res.status(200).send({
+                pages:numberpage,
+                films:result.slice(0,24)
+                
+            })
+        }else{
+            res.status(404).send("not found")
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error)
+    }
+}
+const searchYear = async (req,res)=>{
+    let {year,pag} = req.body;
+    try {
+        const result = await sequelize.query(`select * from Films where yRelease like '%${year}%'`)
+        if(result[0].length >0){
+            const length = result[0].length
+            const numberpage = Math.ceil(length/24)
+            
+            if(pag){
+                pag = parseInt(pag)
+                console.log("haha");
+                let startfilm = (pag-1)*24;
+                if(startfilm > length || startfilm<0){
+                    return res.status(404).send("Not found")
+                }else{
+                    const films = result[0].slice(startfilm,startfilm+24)
+                    return res.status(200).send({
+                        pages:numberpage,
+                        films:films  
+                    })
+                }
+            }
+
+            res.status(200).send({
+                pages:numberpage,
+                films:result[0].slice(0,24)
+            })
+        }else{
+            res.status(404).send("not found")
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+const getidwithname = async (req,res)=>{
+    const {name,director} = req.body
+    try {
+        const result = await Films.findOne({
+            where :{
+                name:name,
+                director:director
+            }
+        })
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+const handleUpload = (type) =>{
+    return async (req,res)=>{
+        const file = req.file;
+        let linkfile = file.path
+        const id = parseInt(req.params.id)
+        try {
+            const result = await Films.findOne({
+                where: {
+                    id
+                }
+            })
+            if(result[type]){
+                fs.unlinkSync(result[type]);
+             }
+             result[type] = linkfile
+            result.save()
+            res.status(201).send(result)
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    }
+}
+const mostView = async (req,res)=>{
+    try {
+        const result = await sequelize.query(`select * from Films order by views desc`)
+        if(result){
+            res.status(200).send(result[0].slice(0,10))
+        }else{
+            res.status(404).send("not found !")
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
 module.exports = {
     createFilm,
     deleteFilm,
@@ -372,6 +460,11 @@ module.exports = {
     searchFilm,
     uploadFilm,
     getFilmWatching,
-    setListFilmToDb,
-    handleView
+    handleView,
+    searchFilmType,
+    getidwithname,
+    handleUpload,
+    searchCountry,
+    mostView,
+    searchYear
 }
